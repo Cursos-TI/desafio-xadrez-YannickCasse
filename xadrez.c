@@ -1,78 +1,102 @@
 #include <stdio.h>
 
-int main() {
-    // Variáveis de limite para os movimentos retos e diagonais
-    int limiteTorre = 5;
-    int limiteBispo = 5;
-    int limiteRainha = 8;
+/* ====================================================================
+   FUNÇÕES RECURSIVAS (Substituem os loops simples)
+   ==================================================================== */
 
-    /* ====================================================================
-       1. MOVIMENTO DA TORRE
-       Estrutura: for
-       Regra: 5 casas para a direita em linha reta.
-       ==================================================================== */
-    printf("--- Movimento da Torre ---\n");
-    for (int passoTorre = 0; passoTorre < limiteTorre; passoTorre++) {
+// Função recursiva para a Torre: se move em linha reta para a direita
+void moverTorreRecursivo(int casas) {
+    // Condição de parada (Caso Base)
+    if (casas <= 0) {
+        return;
+    }
+    printf("Direita\n");
+    // Chamada recursiva diminuindo o número de casas restantes (Caso Recursivo)
+    moverTorreRecursivo(casas - 1);
+}
+
+// Função recursiva para o Bispo: se move na diagonal (Cima Direita)
+void moverBispoRecursivo(int casas) {
+    if (casas <= 0) {
+        return;
+    }
+    printf("Cima Direita\n");
+    moverBispoRecursivo(casas - 1);
+}
+
+// Função recursiva para a Rainha: se move em linha reta para a esquerda
+void moverRainhaRecursivo(int casas) {
+    if (casas <= 0) {
+        return;
+    }
+    printf("Esquerda\n");
+    moverRainhaRecursivo(casas - 1);
+}
+
+
+/* ====================================================================
+   FUNÇÃO PRINCIPAL
+   ==================================================================== */
+int main() {
+    // Constantes e variáveis de configuração de passos
+    const int CASAS_TORRE = 5;
+    const int CASAS_BISPO = 5;
+    const int CASAS_RAINHA = 8;
+
+    // 1. MOVIMENTO DA TORRE (Recursivo)
+    printf("--- Movimento da Torre (Recursivo) ---\n");
+    moverTorreRecursivo(CASAS_TORRE);
+
+
+    // 2. MOVIMENTO DO BISPO (Recursivo)
+    printf("\n--- Movimento do Bispo (Recursivo) ---\n");
+    moverBispoRecursivo(CASAS_BISPO);
+
+
+    // 3. MOVIMENTO DO BISPO (Loops Aninhados: Vertical e Horizontal)
+    // Conforme o requisito: loop externo controla a subida (vertical)
+    // e o interno controla o avanço (horizontal) simultaneamente por casa.
+    printf("\n--- Movimento do Bispo (Loops Aninhados) ---\n");
+    for (int i = 0; i < CASAS_BISPO; i++) {
+        for (int j = 0; j < 1; j++) {
+            printf("Cima ");
+        }
         printf("Direita\n");
     }
 
 
-    /* ====================================================================
-       2. MOVIMENTO DO BISPO
-       Estrutura: while
-       Regra: 5 casas na diagonal (Cima e Direita).
-       ==================================================================== */
-    printf("\n--- Movimento do Bispo ---\n");
-    int passoBispo = 0;
-    
-    while (passoBispo < limiteBispo) {
-        printf("Cima Direita\n");
-        passoBispo++;
-    }
+    // 4. MOVIMENTO DA RAINHA (Recursivo)
+    printf("\n--- Movimento da Rainha (Recursivo) ---\n");
+    moverRainhaRecursivo(CASAS_RAINHA);
 
 
     /* ====================================================================
-       3. MOVIMENTO DA RAINHA
-       Estrutura: do-while
-       Regra: 8 casas para a esquerda em linha reta.
-       ==================================================================== */
-    printf("\n--- Movimento da Rainha ---\n");
-    int passoRainha = 0;
-    
-    do {
-        printf("Esquerda\n");
-        passoRainha++;
-    } while (passoRainha < limiteRainha);
-
-
-    /* ====================================================================
-       4. MOVIMENTO DO CAVALO
-       Estrutura: loops aninhados (for e while)
-       Regra: Movimento em "L" (2 casas para baixo, 1 para a esquerda).
-       Lógica: O loop 'for' externo controla os eixos do movimento (0 para 
-       vertical, 1 para horizontal). O loop 'while' interno executa a 
-       quantidade de passos correspondente a cada eixo.
+       5. MOVIMENTO DO CAVALO (Loops Complexos)
+       Regra: Em "L", duas casas para CIMA e uma para a DIREITA.
+       Lógica: Utilizamos um loop externo infinito 'for' controlado por 
+       múltiplas variáveis (i, j) e condições internas com 'break' e 'continue'.
        ==================================================================== */
     printf("\n--- Movimento do Cavalo ---\n");
     
-    // O loop externo iterará 2 vezes (uma para a reta maior do 'L', outra para a menor)
-    for (int eixo = 0; eixo < 2; eixo++) {
+    // Inicialização de múltiplas variáveis de controle no for
+    // i: passos para cima | j: passos para a direita
+    for (int i = 0, j = 0; ; i++) {
         
-        int passosExecutados = 0; // Reinicia a contagem a cada novo eixo
+        // Controle do movimento vertical (duas casas para cima)
+        if (i < 2) {
+            printf("Cima\n");
+            continue; // Pula o restante do loop e força a próxima iteração vertical
+        }
         
-        // Eixo 0: Movimento vertical (2 casas para baixo)
-        if (eixo == 0) {
-            while (passosExecutados < 2) {
-                printf("Baixo\n");
-                passosExecutados++;
-            }
-        } 
-        // Eixo 1: Movimento horizontal perpendicular (1 casa para a esquerda)
-        else {
-            while (passosExecutados < 1) {
-                printf("Esquerda\n");
-                passosExecutados++;
-            }
+        // Controle do movimento horizontal (uma casa para a direita)
+        if (j < 1) {
+            printf("Direita\n");
+            j++;
+        }
+        
+        // Condição de parada complexa: se já subiu 2 e foi 1 para a direita, sai do loop
+        if (i >= 2 && j >= 1) {
+            break; 
         }
     }
 
